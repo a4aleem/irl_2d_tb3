@@ -1,0 +1,9 @@
+local_costmap:
+  global_frame: odom
+  robot_base_frame: $(arg robot_namespace)/base_link
+  update_frequency: 10.0
+  publish_frequency: 10.0
+  rolling_window: true
+  width: 6.0
+  height: 6.0
+  resolution: 0.05

@@ -1,0 +1,26 @@
+<launch>
+	<!-- setup arguments -->
+    <arg name="node_name" default="odom_to_pose" />
+    <arg name="frame_name" default="map" />
+    <arg name="odom_topic" />
+    <arg name="output_pose_topic" />
+    <arg name="offset_x" default="0" />
+    <arg name="offset_y" default="0" />
+    <arg name="offset_z" default="0" />
+
+    <!-- launch odom_to_pose to publish ground truth trajectory of
+        the robot -->
+    <node
+        pkg="irl_2d_tb3_tools"
+        type="odom_to_pose.py"
+        name="$(arg node_name)">
+
+        <param name="frame_name" value="map" />
+        <param name="odom_topic" type="string" value="$(arg odom_topic)"/>
+        <param name="output_pose_topic" type="string" value="$(arg output_pose_topic)"/>
+        <param name="offset_x" value="$(arg offset_x)" />
+        <param name="offset_y" value="$(arg offset_y)" />
+        <param name="offset_z" value="$(arg offset_z)" />
+    </node>
+
+</launch>

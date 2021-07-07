@@ -1,0 +1,70 @@
+<launch>
+  <!-- node info parameters -->
+  <arg name="output" default="screen" />
+  <arg name="robot_namespace" default="turtlebot3" />
+  <arg name="beacon_localization" default="false" />
+
+  <!-- Load robot controller configuration -->
+  <rosparam
+    file="$(find irl_2d_tb3_control)/config/turtlebot3/control.yaml"
+    subst_value="true"
+    command="load"/>
+
+  <!-- load the controllers -->
+  <node name="controller_spawner"
+      pkg="controller_manager"
+      type="spawner"
+      respawn="false"
+      output="$(arg output)"
+      args="/$(arg robot_namespace)/joint_publisher /$(arg robot_namespace)/velocity_controller"/>
+
+  <!-- add robot localization node for sensor fusion for odometry -->
+  <node
+      pkg="robot_localization"
+      type="ekf_localization_node"
+      name="ekf_localization_odom"
+      output="$(arg output)">
+    <rosparam
+      command="load"
+      subst_value="true"
+      file="$(find irl_2d_tb3_control)/config/turtlebot3/robot_localization_odom.yaml" />
+    <remap from="/$(arg robot_namespace)/odometry/filtered" to="/$(arg robot_namespace)/odometry/filtered_odom"/>
+  </node>
+
+  <!-- launch odom_to_pose node to publish beacon state data from Odometry to
+       PoseWithStampedCovariance msgs -->
+  <include file="$(find irl_2d_tb3_tools)/launch/odom_to_pose.launch">
+    <arg name="node_name" value="beacon_odom_to_pose" />
+    <arg name="odom_topic" value="/$(arg robot_namespace)/beacon/state" />
+    <arg name="output_pose_topic" value="/$(arg robot_namespace)/beacon/pose" />
+  </include>
+
+  <!-- add robot localization node for sensor fusion for global beacon state -->
+  <group if="$(arg beacon_localization)">
+    <node
+        pkg="robot_localization"
+        type="ekf_localization_node"
+        name="ekf_localization_map"
+        output="$(arg output)">
+        <rosparam
+        command="load"
+        subst_value="true"
+        file="$(find irl_2d_tb3_control)/config/turtlebot3/robot_localization_map.yaml" />
+        <remap from="/$(arg robot_namespace)/odometry/filtered" to="/$(arg robot_namespace)/odometry/filtered_map"/>
+    </node>
+  </group>
+
+  <!-- add twist mux node for handling multiple velocity inputs to be remapped
+    to the velocity_controller/cmd_vel topic -->
+  <node
+      pkg="twist_mux"
+      type="twist_mux"
+      name="twist_mux"
+      output="$(arg output)">
+    <rosparam
+      command="load"
+      file="$(find irl_2d_tb3_control)/config/turtlebot3/twist_mux.yaml" />
+    <remap from="cmd_vel_out" to="/cmd_vel"/>
+  </node>
+
+</launch>

@@ -1,0 +1,77 @@
+<launch>
+  <arg name="output" default="screen" />
+  <arg name="robot_namespace" default="kobuki" />
+
+  <!-- start move_base node -->
+  <node
+    pkg="move_base"
+    type="move_base"
+    respawn="false"
+    name="move_base"
+    output="$(arg output)" >
+    <!-- load common parameters for global costmap -->
+    <rosparam
+      file="$(find irl_2d_tb3_navigation)/config/map_nav/costmap_common.yaml"
+      command="load"
+      subst_value="true"
+      ns="global_costmap" />
+
+    <!-- load common parameters for local costmap -->
+    <rosparam
+      file="$(find irl_2d_tb3_navigation)/config/map_nav/costmap_common.yaml"
+      command="load"
+      subst_value="true"
+      ns="local_costmap" />
+
+    <!-- load odometry specific parameters for global costmap -->
+    <rosparam
+      file="$(find irl_2d_tb3_navigation)/config/map_nav/global_costmap.yaml"
+      command="load"
+      subst_value="true"/>
+
+    <!-- load odometry specific parameters for local costmap -->
+    <rosparam
+      file="$(find irl_2d_tb3_navigation)/config/map_nav/local_costmap.yaml"
+      command="load"
+      subst_value="true"/>
+
+    <!-- load local planner config parameters -->
+    <rosparam
+      file="$(find irl_2d_tb3_navigation)/config/base_local_planner.yaml"
+      command="load"
+      subst_value="true"/>
+
+    <!-- load move_base config parameters -->
+    <rosparam
+      file="$(find irl_2d_tb3_navigation)/config/move_base.yaml"
+      command="load"
+      subst_value="true" />
+
+    <!-- set global planner configuration -->
+    <rosparam
+      file="$(find irl_2d_tb3_navigation)/config/map_nav/global_planner.yaml"
+      command="load"
+      subst_value="true" />
+
+    <!-- set global planner -->
+    <param
+      name="base_global_planner"
+      type="string"
+      value="navfn/NavfnROS" />
+
+    <!-- set local planner -->
+    <param
+      name="base_local_planner"
+      value="base_local_planner/TrajectoryPlannerROS"/>
+
+    <!-- reset odom to odometry/filtered which is published by
+      robot_localization package -->
+    <remap from="odom" to="$(arg robot_namespace)/odometry/filtered" />
+  </node>
+
+  <!-- launch rviz for output -->
+  <include file="$(find irl_2d_tb3_navigation)/launch/gmapping.launch">
+    <arg name="robot_namespace" value="$(arg robot_namespace)" />
+  </include>
+
+</launch>

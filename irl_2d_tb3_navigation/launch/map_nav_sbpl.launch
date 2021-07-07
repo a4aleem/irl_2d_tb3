@@ -1,0 +1,67 @@
+<launch>
+  <arg name="output" default="screen" />
+
+  <!-- start move_base node -->
+  <node
+    pkg="move_base"
+    type="move_base"
+    respawn="false"
+    name="move_base"
+    output="$(arg output)" >
+    <!-- load common parameters for global costmap -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/map_nav_sbpl/costmap_common.yaml"
+      command="load"
+      ns="global_costmap" />
+
+    <!-- load common parameters for local costmap -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/map_nav_sbpl/costmap_common.yaml"
+      command="load"
+      ns="local_costmap" />
+
+    <!-- load odometry specific parameters for global costmap -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/map_nav_sbpl/global_costmap.yaml"
+      command="load" />
+
+    <!-- load odometry specific parameters for local costmap -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/map_nav_sbpl/local_costmap.yaml"
+      command="load" />
+
+    <!-- load local planner config parameters -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/base_local_planner.yaml"
+      command="load" />
+
+    <!-- load move_base config parameters -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/move_base.yaml"
+      command="load" />
+
+    <!-- set global planner configuration -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/map_nav_sbpl/global_planner.yaml"
+      command="load" />
+
+    <!-- set global planner -->
+    <param name="base_global_planner" value="SBPLLatticePlanner" />
+    <param
+      name="SBPLLatticePlanner/primitive_filename"
+      value="$(find irl_2d_navigation)/sbpl/pioneer3at.mprim" />
+
+    <!-- set local planner -->
+    <param
+      name="base_local_planner"
+      value="base_local_planner/TrajectoryPlannerROS"/>
+
+    <!-- reset odom to odometry/filtered which is published by
+      robot_localization package -->
+    <remap from="odom" to="odometry/filtered" />
+  </node>
+
+  <!-- launch rviz for output -->
+  <include file="$(find irl_2d_navigation)/launch/gmapping.launch"/>
+
+</launch>

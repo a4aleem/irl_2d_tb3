@@ -1,0 +1,16 @@
+<launch>
+  <arg
+    name="rvizconfig"
+    default="$(find irl_2d_tb3_description)/rviz/model.rviz" />
+
+  <include file="$(find irl_2d_tb3_description)/launch/upload_turtlebot3.xml">
+    <arg name="tf_prefix" value="turtlebot3"/>
+  </include>
+
+  <node
+    name="rviz"
+    pkg="rviz"
+    type="rviz"
+    args="-d $(arg rvizconfig)"
+    required="true" />
+</launch>

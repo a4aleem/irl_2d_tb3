@@ -1,0 +1,65 @@
+<launch>
+  <arg name="output" default="screen" />
+  <arg name="robot_namespace" default="kobuki" />
+
+  <!-- start move_base node -->
+  <node
+    pkg="move_base"
+    type="move_base"
+    respawn="false"
+    name="move_base"
+    output="$(arg output)" >
+    <!-- load common parameters for global costmap -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/odom_nav/costmap_common.yaml"
+      command="load"
+      subst_value="true"
+      ns="global_costmap" />
+
+    <!-- load common parameters for local costmap -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/odom_nav/costmap_common.yaml"
+      command="load"
+      subst_value="true"
+      ns="local_costmap" />
+
+    <!-- load odometry specific parameters for global costmap -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/odom_nav/global_costmap.yaml"
+      command="load"
+      subst_value="true"/>
+
+    <!-- load odometry specific parameters for local costmap -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/odom_nav/local_costmap.yaml"
+      command="load"
+      subst_value="true"/>
+
+    <!-- load local planner config parameters -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/dwa_local_planner.yaml"
+      command="load"
+      subst_value="true"/>
+
+    <!-- load move_base config parameters -->
+    <rosparam
+      file="$(find irl_2d_navigation)/config/move_base.yaml"
+      command="load"
+      subst_value="true"/>
+
+    <!-- <param
+      name="base_global_planner"
+      type="string"
+      value="navfn/NavfnROS" /> -->
+
+    <!-- set local planner name -->
+    <param
+      name="base_local_planner"
+      value="dwa_local_planner/DWAPlannerROS"/>
+
+    <!-- reset odom to odometry/filtered which is published by
+      robot_localization package -->
+    <remap from="odom" to="odometry/filtered" />
+  </node>
+
+</launch>

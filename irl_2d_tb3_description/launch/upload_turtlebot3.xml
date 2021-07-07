@@ -1,0 +1,5 @@
+<launch>
+  <arg name="tf_prefix" default="turtlebot3"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find irl_2d_tb3_description)/urdf/turtlebot3_burger.urdf.xacro' tf_prefix:=$(arg tf_prefix)" />
+</launch>

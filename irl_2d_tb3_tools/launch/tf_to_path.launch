@@ -1,0 +1,20 @@
+<launch>
+	<!-- setup arguments -->
+  <arg name="node_name" default="tf_to_path" />
+  <arg name="from_frame" />
+	<arg name="to_frame" />
+
+  <!-- launch hector trajectory server to publish ground truth trajectory of
+    the robot -->
+  <node
+      pkg="irl_2d_tb3_tools"
+      type="tf_to_path.py"
+      name="$(arg node_name)"
+      output="screen">
+
+    <param name="from_frame" type="string" value="$(arg from_frame)"/>
+    <param name="to_frame" type="string" value="$(arg to_frame)"/>
+
+  </node>
+
+</launch>
