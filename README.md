@@ -31,7 +31,7 @@ Install:
 
   Launch:
 
-    Launch robot simulation:
+    roslaunch irl_2d_tb3_gazebo turtlebot3_world.launch
 
 
 ## Turtlebot3 based SLAM and NAV:
