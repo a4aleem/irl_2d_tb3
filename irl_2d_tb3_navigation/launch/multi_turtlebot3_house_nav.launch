@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Arguments -->
+  <arg name="model" default="burger"/>
+  <arg name="map_file" default="$(find irl_2d_tb3_navigation)/maps/house.yaml"/>
+  
+  <include file="$(find irl_2d_tb3_navigation)/launch/multi_0_turtlebot3_navigation.launch">
+	  <arg name="model" value="$(arg model)" />
+	  <arg name="map_file" default="$(arg map_file)" />
+  </include>
+  <include file="$(find irl_2d_tb3_navigation)/launch/multi_1_turtlebot3_navigation.launch">
+	  <arg name="model" value="$(arg model)" />
+	  <arg name="map_file" default="$(arg map_file)" />
+  </include>
+  <include file="$(find irl_2d_tb3_navigation)/launch/multi_2_turtlebot3_navigation.launch">
+	  <arg name="model" value="$(arg model)" />
+	  <arg name="map_file" default="$(arg map_file)" />
+  </include>
+
+
+  <!-- rviz -->
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find irl_2d_tb3_navigation)/rviz/multi_turtlebot3_navigation.rviz"/>
+</launch>

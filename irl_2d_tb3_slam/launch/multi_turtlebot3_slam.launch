@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Multi Turtlebot3 Slam -->
+  <include file="$(find irl_2d_tb3_slam)/launch/turtlebot3_slam.launch">
+    <arg name="ns" value="tb3_0" />
+  </include>
+
+  <include file="$(find irl_2d_tb3_slam)/launch/turtlebot3_slam.launch">
+    <arg name="ns" value="tb3_1" />
+  </include>
+
+  <include file="$(find irl_2d_tb3_slam)/launch/turtlebot3_slam.launch">
+    <arg name="ns" value="tb3_2" />
+  </include>
+
+</launch>
