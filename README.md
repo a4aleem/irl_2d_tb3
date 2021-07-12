@@ -1,7 +1,4 @@
-# irl_2d_tb3
-Turtlebot 3 - SLAM &amp; Navigation
-
-# SLAM & Navigation - Turtlebot 3
+# Frontier based Exploration on Turtlebot3
 
 ## TERMINAL#1
 
@@ -9,7 +6,7 @@ cd catkin_ws/
 
 source devel/setup.bash
 
-roslaunch irl_2d_tb3_gazebo turtlebot3_irllab.launch 
+roslaunch irl_2d_tb3_gazebo turtlebot3_irllab.launch
 
 ## TERMINAL#2
 
@@ -17,4 +14,9 @@ cd catkin_ws/
 
 source devel/setup.bash
 
-roslaunch irl_2d_tb3_gazebo turtlebot3_map_nav.launch
+roslaunch irl_2d_tb3_autonomous_exploration turtlebot3_exploration.launch 
+
+
+  
+
+ 
